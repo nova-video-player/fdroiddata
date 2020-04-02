@@ -1,0 +1,49 @@
+AntiFeatures:
+  - NonFreeNet
+Categories:
+  - Multimedia
+License: Apache-2.0
+WebSite: https://github.com/nova-video-player/aos-AVP/
+SourceCode: https://github.com/nova-video-player/
+
+RepoType: git
+Repo: https://github.com/nova-video-player/aos-fdroid/
+
+AutoName: NovaVideoPlayer
+Description: |-
+    Hello world how are you? This is a very nice description innit?
+
+Builds:
+  - versionName: '4.43'
+    versionCode: 40043
+    commit: bc38466848b3d1bb2ce011cacc96e746c93b2013
+    submodules: true
+    subdir: Video
+    output: build/outputs/apk/noamazon/release/Video-universal-release-unsigned.apk
+    ndk: r20
+    rm:
+      - native/libtorrent/bin*
+      - native/torrentd/libs
+      - native/dav1d-android-builder/build-*
+      - native/ffmpeg-android-builder/dist-full-*
+      - MediaLib/libs/trakt-java.jar
+    sudo:
+      - wget http://ftp.debian.org/debian/pool/main/n/nasm/nasm_2.14-1_amd64.deb && dpkg -i nasm_2.14-1_amd64.deb && rm -f nasm_2.14-1_amd64.deb
+      - apt-get install -y ninja-build python
+      #This is needed because build is broken on 0.54
+      - pip3 install meson==0.53.2
+    prebuild:
+      - $ANDROID_HOME/tools/bin/sdkmanager 'platforms;android-29' 'build-tools;29.0.2'
+        #      - sed -i -e '/4thline/d' -e '/mvnrepository.com/d' ../MediaLib/build.gradle ../FileCoreLibrary/build.gradle build.gradle
+      - sed -i -e '/mvnrepository.com/d' ../MediaLib/build.gradle ../FileCoreLibrary/build.gradle build.gradle
+      - sed -i -e 's/versionName.*/versionName "4.43"/g' build.gradle
+      - sed -i -e 's/2108380 .*/40043/g' build.gradle
+    gradleprops:
+      - universal
+    gradle:
+      - Noamazon
+
+AutoUpdateMode: None
+UpdateCheckMode: Tags
+CurrentVersion: '4.43'
+CurrentVersionCode: 1
